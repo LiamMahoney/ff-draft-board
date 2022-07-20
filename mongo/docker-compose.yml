@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  mongo:
+    container_name: ff-draft-board-mongo
+    image: mongo:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_ROOT_DB:-init_db}
+    volumes:
+      - ./docker-entrypoint-initdb.d/mongo_init.js:/docker-entrypoint-initdb.d/mongo_init.js:ro
+    networks:
+      - ff_draft_board
+
+networks:
+  ff_draft_board:
+    external: false
+    name: ff_draft_board
